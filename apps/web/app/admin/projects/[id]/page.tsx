@@ -27,7 +27,7 @@ export default function EditProjectPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold text-foreground">Edit Project</h1>
-      <ProjectForm project={project} />
+      <ProjectForm project={project} key={project.id} />
     </div>
   );
 }

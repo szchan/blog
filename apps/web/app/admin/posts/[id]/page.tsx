@@ -27,7 +27,7 @@ export default function EditPostPage() {
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold text-foreground">Edit Post</h1>
-      <PostForm post={post} />
+      <PostForm post={post} key={post.id} />
     </div>
   );
 }

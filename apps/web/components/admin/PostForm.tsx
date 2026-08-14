@@ -40,6 +40,7 @@ export function PostForm({ post }: PostFormProps) {
   const [categoryId, setCategoryId] = useState<string>(
     post?.category?.id ?? "",
   );
+  const [submitError, setSubmitError] = useState("");
 
   const isEdit = !!post;
 
@@ -51,6 +52,7 @@ export function PostForm({ post }: PostFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
     const data = {
       title,
       slug,
@@ -65,11 +67,15 @@ export function PostForm({ post }: PostFormProps) {
     if (isEdit && post) {
       updatePost.mutate(
         { id: post.id, data },
-        { onSuccess: () => router.push("/admin/posts") },
+        {
+          onSuccess: () => router.push("/admin/posts"),
+          onError: () => setSubmitError("Failed to save. Please try again."),
+        },
       );
     } else {
       createPost.mutate(data, {
         onSuccess: () => router.push("/admin/posts"),
+        onError: () => setSubmitError("Failed to save. Please try again."),
       });
     }
   };
@@ -195,6 +201,9 @@ export function PostForm({ post }: PostFormProps) {
           Cancel
         </button>
       </div>
+      {submitError && (
+        <p className="text-sm text-red-400">{submitError}</p>
+      )}
     </form>
   );
 }

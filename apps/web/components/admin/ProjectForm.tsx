@@ -28,11 +28,13 @@ export function ProjectForm({ project }: ProjectFormProps) {
   const [sortOrder, setSortOrder] = useState(
     project?.sort_order ?? 0,
   );
+  const [submitError, setSubmitError] = useState("");
 
   const isEdit = !!project;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
     const data = {
       title,
       slug,
@@ -51,11 +53,15 @@ export function ProjectForm({ project }: ProjectFormProps) {
     if (isEdit && project) {
       updateProject.mutate(
         { id: project.id, data },
-        { onSuccess: () => router.push("/admin/projects") },
+        {
+          onSuccess: () => router.push("/admin/projects"),
+          onError: () => setSubmitError("Failed to save. Please try again."),
+        },
       );
     } else {
       createProject.mutate(data, {
         onSuccess: () => router.push("/admin/projects"),
+        onError: () => setSubmitError("Failed to save. Please try again."),
       });
     }
   };
@@ -173,6 +179,9 @@ export function ProjectForm({ project }: ProjectFormProps) {
           Cancel
         </button>
       </div>
+      {submitError && (
+        <p className="text-sm text-red-400">{submitError}</p>
+      )}
     </form>
   );
 }

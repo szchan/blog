@@ -45,7 +45,10 @@ export async function adminFetch<T>(
 
   if (res.status === 401) {
     removeToken();
-    if (typeof window !== "undefined") {
+    if (
+      typeof window !== "undefined" &&
+      !window.location.pathname.startsWith("/admin/login")
+    ) {
       window.location.href = "/admin/login";
     }
     throw new AdminApiError("Unauthorized", 401);

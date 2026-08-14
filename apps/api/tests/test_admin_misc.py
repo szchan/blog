@@ -1,3 +1,8 @@
+import uuid
+
+from app.models.project import Project
+
+
 def test_admin_create_tag(admin_client):
     response = admin_client.post(
         "/api/admin/tags",
@@ -106,3 +111,32 @@ def test_admin_delete_project(admin_client):
 
 def test_admin_tags_require_auth(client):
     assert client.get("/api/admin/tags").status_code == 401
+
+
+def test_admin_get_project_by_id(admin_client, session):
+    project = Project(
+        title="Detail Project",
+        slug="detail-project",
+        description="A project",
+        content="Full content here",
+        tech_stack=["Python"],
+        github_url="https://github.com/me/proj",
+    )
+    session.add(project)
+    session.commit()
+
+    response = admin_client.get(f"/api/admin/projects/{project.id}")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["title"] == "Detail Project"
+    assert body["content"] == "Full content here"
+    assert "created_at" in body
+
+
+def test_admin_get_project_not_found(admin_client):
+    response = admin_client.get(f"/api/admin/projects/{uuid.uuid4()}")
+    assert response.status_code == 404
+
+
+def test_admin_get_project_requires_auth(client):
+    assert client.get(f"/api/admin/projects/{uuid.uuid4()}").status_code == 401
