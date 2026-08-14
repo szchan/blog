@@ -9,7 +9,7 @@ interface PostContentProps {
 
 export function PostContent({ content }: PostContentProps) {
   return (
-    <div className="prose prose-invert max-w-none">
+    <div className="max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{

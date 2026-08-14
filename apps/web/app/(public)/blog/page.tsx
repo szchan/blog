@@ -14,7 +14,7 @@ export default async function BlogPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const sp = await searchParams;
-  const page = parseInt((sp.page as string) ?? "1", 10);
+  const page = Math.max(1, parseInt((sp.page as string) ?? "1", 10) || 1);
   const tag = sp.tag as string | undefined;
   const category = sp.category as string | undefined;
 
