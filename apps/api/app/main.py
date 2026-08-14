@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 
+from app.api.admin.posts import router as admin_posts_router
 from app.api.auth import router as auth_router
 from app.api.categories import router as categories_router
 from app.api.posts import router as posts_router
@@ -13,6 +14,7 @@ app.include_router(posts_router)
 app.include_router(tags_router)
 app.include_router(categories_router)
 app.include_router(projects_router)
+app.include_router(admin_posts_router)
 
 
 @app.get("/api/health")
