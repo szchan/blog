@@ -1,0 +1,36 @@
+import Link from "next/link";
+import { GlassCard } from "@/components/ui/GlassCard";
+import { TechBadge } from "@/components/projects/TechBadge";
+import type { Project } from "@/lib/types";
+
+interface ProjectCardProps {
+  project: Project;
+}
+
+export function ProjectCard({ project }: ProjectCardProps) {
+  return (
+    <Link
+      href={`/projects/${project.slug}`}
+      className="block transition-transform hover:scale-[1.02]"
+    >
+      <GlassCard className="h-full p-6">
+        <div className="flex flex-col gap-3">
+          <h3 className="text-lg font-semibold text-foreground">
+            {project.title}
+          </h3>
+          <p className="text-sm text-muted">{project.description}</p>
+          <div className="flex flex-wrap gap-2">
+            {project.tech_stack.map((tech) => (
+              <TechBadge key={tech} tech={tech} />
+            ))}
+          </div>
+          {project.demo_url && (
+            <span className="text-xs text-primary-light">
+              Live demo available
+            </span>
+          )}
+        </div>
+      </GlassCard>
+    </Link>
+  );
+}
