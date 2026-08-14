@@ -69,3 +69,79 @@ export interface Project {
   sort_order: number;
   created_at: string;
 }
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+}
+
+export interface PostCreate {
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  content: string;
+  cover_image?: string | null;
+  tag_ids: string[];
+  category_id?: string | null;
+  status: PostStatus;
+}
+
+export interface PostUpdate {
+  title?: string;
+  slug?: string;
+  excerpt?: string | null;
+  content?: string;
+  cover_image?: string | null;
+  status?: PostStatus;
+  tag_ids?: string[];
+  category_id?: string | null;
+}
+
+export interface TagCreate {
+  name: string;
+  slug: string;
+}
+
+export interface TagUpdate {
+  name?: string;
+  slug?: string;
+}
+
+export interface CategoryCreate {
+  name: string;
+  slug: string;
+}
+
+export interface CategoryUpdate {
+  name?: string;
+  slug?: string;
+}
+
+export interface ProjectCreate {
+  title: string;
+  slug: string;
+  description: string;
+  content: string;
+  tech_stack: string[];
+  github_url: string;
+  demo_url?: string | null;
+  cover_image?: string | null;
+  sort_order?: number;
+}
+
+export interface ProjectUpdate {
+  title?: string;
+  slug?: string;
+  description?: string;
+  content?: string;
+  tech_stack?: string[];
+  github_url?: string;
+  demo_url?: string | null;
+  cover_image?: string | null;
+  sort_order?: number;
+}
