@@ -19,6 +19,3 @@ class AuthService:
             return None
         token = create_access_token(str(user.id))
         return TokenResponse(access_token=token)
-
-    def get_user_by_id(self, user_id: str) -> User | None:
-        return self.session.query(User).filter(User.id == user_id).first()

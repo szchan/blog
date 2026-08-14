@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy.exc import IntegrityError
 
 from app.api.admin.categories import router as admin_categories_router
 from app.api.admin.posts import router as admin_posts_router
@@ -30,6 +32,14 @@ app.include_router(admin_posts_router)
 app.include_router(admin_tags_router)
 app.include_router(admin_categories_router)
 app.include_router(admin_projects_router)
+
+
+@app.exception_handler(IntegrityError)
+async def integrity_error_handler(request: Request, exc: IntegrityError) -> JSONResponse:
+    return JSONResponse(
+        status_code=409,
+        content={"detail": "Resource with this slug already exists"},
+    )
 
 
 @app.get("/api/health")
