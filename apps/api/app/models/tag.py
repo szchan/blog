@@ -1,9 +1,15 @@
+from __future__ import annotations
+
 import uuid
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, ForeignKey, String, Table
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base
+
+if TYPE_CHECKING:
+    from app.models.post import Post
 
 post_tags = Table(
     "post_tags",
@@ -19,3 +25,7 @@ class Tag(Base):
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     slug: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+
+    posts: Mapped[list[Post]] = relationship(
+        secondary=post_tags, back_populates="tags"
+    )
