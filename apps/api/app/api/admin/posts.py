@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_admin
 from app.core.database import get_db
 from app.models.user import User
-from app.schemas.post import PostCreate, PostListResponse, PostUpdate
+from app.schemas.post import PostCreate, PostDetailResponse, PostListResponse, PostUpdate
 from app.services.post import PostService
 
 router = APIRouter(prefix="/api/admin/posts", tags=["admin-posts"])
@@ -19,6 +19,19 @@ def list_all_posts(
 ) -> list[PostListResponse]:
     svc = PostService(db)
     return svc.get_all_posts()
+
+
+@router.get("/{post_id}", response_model=PostDetailResponse)
+def get_post_by_id(
+    post_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    admin: User = Depends(get_current_admin),
+) -> PostDetailResponse:
+    svc = PostService(db)
+    post = svc.repo.get_by_id(post_id)
+    if post is None:
+        raise HTTPException(status_code=404, detail="Post not found")
+    return PostDetailResponse.model_validate(post)
 
 
 @router.post("", response_model=PostListResponse, status_code=201)
