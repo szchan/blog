@@ -21,6 +21,19 @@ def list_projects(
     return svc.list_projects()
 
 
+@router.get("/{project_id}", response_model=ProjectResponse)
+def get_project_by_id(
+    project_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    admin: User = Depends(get_current_admin),
+) -> ProjectResponse:
+    svc = ProjectService(db)
+    project = svc.repo.get_by_id(project_id)
+    if project is None:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return ProjectResponse.model_validate(project)
+
+
 @router.post("", response_model=ProjectResponse, status_code=201)
 def create_project(
     data: ProjectCreate,
