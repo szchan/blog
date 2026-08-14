@@ -1,11 +1,9 @@
 import os
 
-from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
+from app.core.security import hash_password
 from app.models.user import User
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def seed_admin(session: Session) -> None:
@@ -21,7 +19,7 @@ def seed_admin(session: Session) -> None:
     admin = User(
         email=admin_email,
         username=admin_username,
-        password_hash=pwd_context.hash(admin_password),
+        password_hash=hash_password(admin_password),
         is_admin=True,
     )
     session.add(admin)
