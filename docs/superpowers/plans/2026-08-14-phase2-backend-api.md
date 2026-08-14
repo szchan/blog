@@ -82,10 +82,12 @@ apps/api/tests/
 ## Task 1: Schemas + Security Module
 
 **Files:**
+
 - Create: `app/core/security.py`, `app/schemas/__init__.py`, `app/schemas/auth.py`, `app/schemas/common.py`, `app/schemas/tag.py`, `app/schemas/category.py`, `app/schemas/post.py`, `app/schemas/project.py`, `tests/test_security.py`
 - Modify: `app/core/seed.py` (import pwd_context from security)
 
 **Interfaces:**
+
 - Produces: `hash_password(plain) -> str`, `verify_password(plain, hashed) -> bool`, `create_access_token(subject) -> str`, `decode_access_token(token) -> str | None`, all Pydantic schemas listed below
 
 - [ ] **Step 1: Create `app/core/security.py`**
@@ -126,6 +128,7 @@ def decode_access_token(token: str) -> str | None:
 - [ ] **Step 2: Modify `app/core/seed.py` to import from security**
 
 Replace the `pwd_context` import and definition:
+
 ```python
 import os
 
@@ -422,9 +425,11 @@ git commit -m "feat: add Pydantic schemas and JWT security module"
 ## Task 2: Repository Layer
 
 **Files:**
+
 - Create: `app/repositories/__init__.py`, `app/repositories/base.py`, `app/repositories/post.py`, `app/repositories/tag.py`, `app/repositories/category.py`, `app/repositories/project.py`
 
 **Interfaces:**
+
 - Consumes: Models from Phase 1, `Session` from `app.core.database`
 - Produces: `BaseRepository(session)`, `PostRepository`, `TagRepository`, `CategoryRepository`, `ProjectRepository`
 
@@ -640,9 +645,11 @@ git commit -m "feat: add repository layer with eager loading and pagination"
 ## Task 3: Service Layer
 
 **Files:**
+
 - Create: `app/services/__init__.py`, `app/services/auth.py`, `app/services/post.py`, `app/services/tag.py`, `app/services/category.py`, `app/services/project.py`, `tests/test_post_service.py`
 
 **Interfaces:**
+
 - Consumes: Repositories from Task 2, security from Task 1, schemas from Task 1
 - Produces: `AuthService`, `PostService`, `TagService`, `CategoryService`, `ProjectService`
 
@@ -1061,10 +1068,12 @@ git commit -m "feat: add service layer with business logic and post service test
 ## Task 4: Auth Router + Test Client Fixtures
 
 **Files:**
+
 - Create: `app/api/__init__.py`, `app/api/deps.py`, `app/api/auth.py`, `tests/test_auth.py`
 - Modify: `tests/conftest.py` (add client, admin_client fixtures)
 
 **Interfaces:**
+
 - Consumes: `AuthService` from Task 3, security from Task 1
 - Produces: `get_current_user` dependency, `get_current_admin` dependency, `oauth2_scheme`, auth router with login/logout/me
 
@@ -1275,6 +1284,7 @@ Expected: Tests may fail because main.py doesn't include the auth router yet. Th
 Actually, to make tests pass, add a temporary include in main.py:
 
 Modify `app/main.py` to include the auth router:
+
 ```python
 from fastapi import FastAPI
 
@@ -1309,10 +1319,12 @@ git commit -m "feat: add auth router with JWT login, logout, me endpoints"
 ## Task 5: Public API Routers
 
 **Files:**
+
 - Create: `app/api/posts.py`, `app/api/tags.py`, `app/api/categories.py`, `app/api/projects.py`, `tests/test_public_api.py`
 - Modify: `app/main.py` (include new routers)
 
 **Interfaces:**
+
 - Consumes: `PostService`, `TagService`, `CategoryService`, `ProjectService` from Task 3
 - Produces: Public API routers for posts, tags, categories, projects
 
@@ -1593,9 +1605,11 @@ git commit -m "feat: add public API endpoints for posts, tags, categories, proje
 ## Task 6: Admin API — Posts CRUD
 
 **Files:**
+
 - Create: `app/api/admin/__init__.py`, `app/api/admin/posts.py`, `tests/test_admin_posts.py`
 
 **Interfaces:**
+
 - Consumes: `PostService` from Task 3, `get_current_admin` from Task 4
 - Produces: Admin posts CRUD router
 
@@ -1666,11 +1680,13 @@ def delete_post(
 - [ ] **Step 3: Update `app/main.py` to include admin posts router**
 
 Add to the imports:
+
 ```python
 from app.api.admin.posts import router as admin_posts_router
 ```
 
 Add to the router includes:
+
 ```python
 app.include_router(admin_posts_router)
 ```
@@ -1764,10 +1780,12 @@ git commit -m "feat: add admin posts CRUD endpoints with auth"
 ## Task 7: Admin API — Tags, Categories, Projects + Image Upload
 
 **Files:**
+
 - Create: `app/api/admin/tags.py`, `app/api/admin/categories.py`, `app/api/admin/projects.py`, `tests/test_admin_misc.py`
 - Modify: `app/main.py` (include new routers)
 
 **Interfaces:**
+
 - Consumes: `TagService`, `CategoryService`, `ProjectService` from Task 3, `get_current_admin` from Task 4
 - Produces: Admin CRUD routers for tags, categories, projects
 
@@ -2132,9 +2150,11 @@ git commit -m "feat: add admin CRUD for tags, categories, projects with CORS"
 ## Task 8: Final Integration Test + Cleanup
 
 **Files:**
+
 - Modify: `tests/test_health.py` (verify health still works with all routers)
 
 **Interfaces:**
+
 - Consumes: All previous tasks
 
 - [ ] **Step 1: Run the full test suite**
@@ -2150,11 +2170,13 @@ Expected: No errors
 - [ ] **Step 3: Verify API docs are accessible**
 
 Run the API server:
+
 ```
 uv run uvicorn app.main:app --reload
 ```
 
 Open `http://localhost:8000/docs` in a browser — verify all endpoints are listed:
+
 - Auth: login, logout, me
 - Public: posts (list + detail), tags, categories, projects (list + detail)
 - Admin: posts CRUD, tags CRUD, categories CRUD, projects CRUD
@@ -2165,6 +2187,7 @@ Stop the server (Ctrl+C).
 - [ ] **Step 4: Commit if any fixes were needed**
 
 If everything passes without fixes, skip this step. If fixes were needed:
+
 ```bash
 git add -A
 git commit -m "fix: integration test fixes for Phase 2 API"

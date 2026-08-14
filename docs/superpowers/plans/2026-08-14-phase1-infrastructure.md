@@ -78,9 +78,11 @@ blog/
 ## Task 1: Backend Setup + User Model
 
 **Files:**
+
 - Create: `.gitignore`, `.env.example`, `apps/api/pyproject.toml`, `apps/api/app/__init__.py`, `apps/api/app/core/__init__.py`, `apps/api/app/core/config.py`, `apps/api/app/core/database.py`, `apps/api/app/models/__init__.py`, `apps/api/app/models/base.py`, `apps/api/app/models/user.py`, `apps/api/tests/__init__.py`, `apps/api/tests/conftest.py`, `apps/api/tests/test_user.py`
 
 **Interfaces:**
+
 - Produces: `Base` (DeclarativeBase subclass), `User` model (id, email, username, password_hash, is_admin, created_at), `settings` (Settings instance), `engine` + `SessionLocal` + `get_db()`, test fixtures `engine` and `session`
 
 - [ ] **Step 1: Create root `.gitignore`**
@@ -187,6 +189,7 @@ testpaths = ["tests"]
 Also create empty `app/__init__.py` and `app/core/__init__.py`.
 
 `apps/api/app/core/config.py`:
+
 ```python
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -207,6 +210,7 @@ settings = Settings()
 ```
 
 `apps/api/app/core/database.py`:
+
 ```python
 from collections.abc import Generator
 
@@ -230,6 +234,7 @@ def get_db() -> Generator[Session, None, None]:
 - [ ] **Step 5: Create `app/models/base.py` and `app/models/__init__.py`**
 
 `apps/api/app/models/base.py`:
+
 ```python
 from sqlalchemy.orm import DeclarativeBase
 
@@ -239,6 +244,7 @@ class Base(DeclarativeBase):
 ```
 
 `apps/api/app/models/__init__.py` (will be updated as models are added):
+
 ```python
 from app.models.base import Base
 from app.models.user import User
@@ -251,6 +257,7 @@ __all__ = ["Base", "User"]
 Also create empty `tests/__init__.py`.
 
 `apps/api/tests/conftest.py`:
+
 ```python
 import pytest
 from sqlalchemy import create_engine
@@ -279,6 +286,7 @@ def session(engine):
 - [ ] **Step 7: Write failing test for User model**
 
 `apps/api/tests/test_user.py`:
+
 ```python
 import uuid
 
@@ -353,16 +361,19 @@ git commit -m "feat: backend setup with User model and test infrastructure"
 ## Task 2: Category + Tag Models
 
 **Files:**
+
 - Create: `apps/api/app/models/category.py`, `apps/api/app/models/tag.py` (includes `post_tags`), `apps/api/tests/test_category.py`, `apps/api/tests/test_tag.py`
 - Modify: `apps/api/app/models/__init__.py`
 
 **Interfaces:**
+
 - Consumes: `Base` from Task 1, `session` fixture from Task 1
 - Produces: `Category` (id, name, slug), `Tag` (id, name, slug), `post_tags` Table (post_id FK, tag_id FK)
 
 - [ ] **Step 1: Write failing tests**
 
 `apps/api/tests/test_category.py`:
+
 ```python
 import uuid
 from app.models.category import Category
@@ -380,6 +391,7 @@ def test_create_category(session):
 ```
 
 `apps/api/tests/test_tag.py`:
+
 ```python
 import uuid
 from app.models.tag import Tag
@@ -475,6 +487,7 @@ git commit -m "feat: add Category and Tag models with post_tags association"
 ## Task 3: Post Model + Relationships
 
 **Files:**
+
 - Create: `apps/api/app/models/post.py`, `apps/api/tests/test_post.py`
 - Modify: `apps/api/app/models/user.py` (add `posts` relationship)
 - Modify: `apps/api/app/models/category.py` (add `posts` relationship)
@@ -482,12 +495,14 @@ git commit -m "feat: add Category and Tag models with post_tags association"
 - Modify: `apps/api/app/models/__init__.py`
 
 **Interfaces:**
+
 - Consumes: `User` from Task 1, `Category` + `Tag` + `post_tags` from Task 2
 - Produces: `Post` model (id, title, slug, excerpt, content, cover_image, status, views, author_id, category_id, published_at, created_at, updated_at; relationships: author, category, tags), `PostStatus` enum (draft, published)
 
 - [ ] **Step 1: Write failing test for Post model**
 
 `apps/api/tests/test_post.py`:
+
 ```python
 import uuid
 from app.models.category import Category
@@ -602,6 +617,7 @@ class Post(Base):
 - [ ] **Step 4: Add `posts` relationship to `user.py`, `category.py`, `tag.py`**
 
 Add to `User` class in `apps/api/app/models/user.py`:
+
 ```python
 from sqlalchemy.orm import relationship
 
@@ -609,6 +625,7 @@ posts: Mapped[list["Post"]] = relationship(back_populates="author")
 ```
 
 Add to `Category` class in `apps/api/app/models/category.py`:
+
 ```python
 from sqlalchemy.orm import relationship
 
@@ -616,6 +633,7 @@ posts: Mapped[list["Post"]] = relationship(back_populates="category")
 ```
 
 Add to `Tag` class in `apps/api/app/models/tag.py`:
+
 ```python
 from sqlalchemy.orm import relationship
 
@@ -656,16 +674,19 @@ git commit -m "feat: add Post model with relationships to User, Category, Tag"
 ## Task 4: Project Model
 
 **Files:**
+
 - Create: `apps/api/app/models/project.py`, `apps/api/tests/test_project.py`
 - Modify: `apps/api/app/models/__init__.py`
 
 **Interfaces:**
+
 - Consumes: `Base` from Task 1, `session` fixture from Task 1
 - Produces: `Project` model (id, title, slug, description, content, tech_stack, github_url, demo_url, cover_image, sort_order, created_at)
 
 - [ ] **Step 1: Write failing test for Project model**
 
 `apps/api/tests/test_project.py`:
+
 ```python
 import uuid
 from app.models.project import Project
@@ -762,10 +783,12 @@ git commit -m "feat: add Project model for portfolio showcase"
 ## Task 5: Alembic Migrations
 
 **Files:**
+
 - Create: `apps/api/alembic.ini`, `apps/api/alembic/env.py`, `apps/api/alembic/script.py.mako`, `apps/api/alembic/versions/` (dir)
 - No test file — verification is running migration against a fresh database
 
 **Interfaces:**
+
 - Consumes: All models from Tasks 1–4, `settings.DATABASE_URL` from Task 1
 - Produces: Alembic migration environment, initial migration creating all tables
 
@@ -823,6 +846,7 @@ Expected: Creates a migration file in `alembic/versions/` with `create_table` fo
 - [ ] **Step 4: Verify migration runs against a fresh SQLite database**
 
 Run:
+
 ```
 cd apps/api
 set DATABASE_URL=sqlite:///test_migrate.db
@@ -830,6 +854,7 @@ alembic upgrade head
 python -c "import sqlite3; c=sqlite3.connect('test_migrate.db'); print(c.execute('SELECT name FROM sqlite_master WHERE type=\"table\"').fetchall())"
 del test_migrate.db
 ```
+
 Expected: All 6 tables listed (users, categories, tags, post_tags, posts, projects, alembic_version)
 
 - [ ] **Step 5: Verify lint, then commit**
@@ -847,15 +872,18 @@ git commit -m "feat: set up Alembic with initial schema migration"
 ## Task 6: FastAPI App + Health Check
 
 **Files:**
+
 - Create: `apps/api/app/main.py`, `apps/api/tests/test_health.py`
 
 **Interfaces:**
+
 - Consumes: `app.core.config.settings` from Task 1
 - Produces: `app` (FastAPI instance with `GET /api/health` endpoint returning `{"status": "healthy"}`)
 
 - [ ] **Step 1: Write failing test for health check**
 
 `apps/api/tests/test_health.py`:
+
 ```python
 from fastapi.testclient import TestClient
 from app.main import app
@@ -906,16 +934,19 @@ git commit -m "feat: add FastAPI app with health check endpoint"
 ## Task 7: Admin Seed Script
 
 **Files:**
+
 - Create: `apps/api/app/core/seed.py`, `apps/api/scripts/seed.py`
 - Create: `apps/api/tests/test_seed.py`
 
 **Interfaces:**
+
 - Consumes: `User` model from Task 1, `settings.ADMIN_EMAIL/USERNAME/PASSWORD` from Task 1, `session` fixture from Task 1
 - Produces: `seed_admin(session: Session) -> None` function that creates admin user if not exists
 
 - [ ] **Step 1: Write failing test for seed_admin**
 
 `apps/api/tests/test_seed.py`:
+
 ```python
 from app.models.user import User
 from app.core.seed import seed_admin
@@ -1020,18 +1051,22 @@ git commit -m "feat: add admin seed script with bcrypt password hashing"
 ## Task 8: Frontend Setup (Next.js + Tailwind)
 
 **Files:**
+
 - Create: `apps/web/` (via `create-next-app`)
 - Customize: `apps/web/app/layout.tsx`, `apps/web/app/page.tsx`
 
 **Interfaces:**
+
 - Produces: Next.js app with App Router, Tailwind CSS, TypeScript, placeholder home page
 
 - [ ] **Step 1: Scaffold Next.js app**
 
 Run from project root:
+
 ```
 npx create-next-app@latest apps/web --ts --tailwind --app --no-src-dir --import-alias "@/*" --eslint --use-npm
 ```
+
 Expected: `apps/web/` directory created with Next.js boilerplate
 
 - [ ] **Step 2: Customize `app/layout.tsx`**
@@ -1095,11 +1130,13 @@ git commit -m "feat: scaffold Next.js frontend with Tailwind CSS"
 ## Task 9: Docker Compose Dev Environment
 
 **Files:**
+
 - Create: `apps/api/Dockerfile`, `apps/api/.dockerignore`
 - Create: `apps/web/Dockerfile`, `apps/web/.dockerignore`
 - Create: `docker-compose.yml`
 
 **Interfaces:**
+
 - Consumes: Backend app from Tasks 1–7, frontend from Task 8
 - Produces: `docker compose up` starts PostgreSQL, Redis, API, and Web with hot reload
 
@@ -1219,21 +1256,27 @@ volumes:
 
 Run: `docker compose up -d`
 Then wait 10 seconds and verify:
+
 ```
 docker compose ps
 ```
+
 Expected: All 4 services (postgres, redis, api, web) show as "running"
 
 Verify API health check:
+
 ```
 curl http://localhost:8000/api/health
 ```
+
 Expected: `{"status":"healthy"}`
 
 Verify web serves:
+
 ```
 curl http://localhost:3000
 ```
+
 Expected: HTML containing "Blog"
 
 - [ ] **Step 7: Run Alembic migration against Docker PostgreSQL**
@@ -1241,6 +1284,7 @@ Expected: HTML containing "Blog"
 ```
 docker compose exec api alembic upgrade head
 ```
+
 Expected: Creates all tables in PostgreSQL
 
 - [ ] **Step 8: Seed admin user**
@@ -1248,6 +1292,7 @@ Expected: Creates all tables in PostgreSQL
 ```
 docker compose exec api python scripts/seed.py
 ```
+
 Expected: "Admin user created: admin@example.com"
 
 - [ ] **Step 9: Tear down and commit**
@@ -1266,10 +1311,12 @@ git commit -m "feat: add Docker Compose for full-stack local development"
 ## Task 10: CI Pipeline + README
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`
 - Create: `README.md`
 
 **Interfaces:**
+
 - Consumes: Backend test/lint commands from Tasks 1–7, frontend build from Task 8
 - Produces: GitHub Actions CI that runs on every PR, project README
 
@@ -1319,7 +1366,7 @@ jobs:
 
 - [ ] **Step 2: Create `README.md`**
 
-```markdown
+````markdown
 # Personal Blog + Portfolio
 
 A full-stack personal blog and portfolio system built with FastAPI and Next.js.
@@ -1354,8 +1401,10 @@ docker compose exec api alembic upgrade head
 # Seed admin user
 docker compose exec api python scripts/seed.py
 ```
+````
 
 Services:
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API docs: http://localhost:8000/docs
@@ -1363,6 +1412,7 @@ Services:
 ### Local Development (without Docker)
 
 **Backend:**
+
 ```bash
 cd apps/api
 pip install -e ".[dev]"
@@ -1373,6 +1423,7 @@ mypy app/                  # type check
 ```
 
 **Frontend:**
+
 ```bash
 cd apps/web
 npm install
@@ -1395,20 +1446,22 @@ blog/
 ## License
 
 MIT
-```
+
+````
 
 - [ ] **Step 3: Commit**
 
 ```bash
 git add .github/ README.md
 git commit -m "feat: add CI pipeline and project README"
-```
+````
 
 - [ ] **Step 4: Push to GitHub and verify CI passes**
 
 ```bash
 git push origin master
 ```
+
 Expected: GitHub Actions CI runs and both backend and frontend jobs pass.
 
 ---

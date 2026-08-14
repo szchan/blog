@@ -34,6 +34,7 @@ docker compose exec api python scripts/seed.py
 ```
 
 Services:
+
 - Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
 - API docs: http://localhost:8000/docs
@@ -41,6 +42,7 @@ Services:
 ### Local Development (without Docker)
 
 **Backend:**
+
 ```bash
 cd apps/api
 pip install -e ".[dev]"
@@ -51,6 +53,7 @@ mypy app/                  # type check
 ```
 
 **Frontend:**
+
 ```bash
 cd apps/web
 npm install

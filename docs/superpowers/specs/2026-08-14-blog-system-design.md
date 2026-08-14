@@ -24,18 +24,18 @@
 
 ### 1.3 技术选型
 
-| 层面 | 选型 | 理由 |
-|------|------|------|
-| 后端框架 | FastAPI | Python 异步、自动 OpenAPI 文档、Pydantic 类型安全 |
-| 前端框架 | Next.js (App Router) | SSG 预渲染、SEO 友好、行业主流 |
-| 数据库 | PostgreSQL 16 | 生产级关系型数据库，展示 SQL 能力 |
-| 缓存 | Redis 7 | 文章列表/详情缓存，展示基础设施能力 |
-| ORM | SQLAlchemy 2.0 + Alembic | 类型提示友好、迁移管理 |
-| 样式 | Tailwind CSS | utility 优先，自定义渐变色板 |
-| 动效 | Framer Motion | 页面切换、滚动渐入、卡片 hover |
-| 数据获取 | React Query (CSR) / SSG (公开页) | 管理页客户端状态、公开页预渲染 |
-| 鉴权 | JWT (httpOnly cookie) | 无状态、前后端分离友好 |
-| 容器化 | Docker Compose + Dockerfile | 一键开发环境、生产部署一致 |
+| 层面     | 选型                             | 理由                                              |
+| -------- | -------------------------------- | ------------------------------------------------- |
+| 后端框架 | FastAPI                          | Python 异步、自动 OpenAPI 文档、Pydantic 类型安全 |
+| 前端框架 | Next.js (App Router)             | SSG 预渲染、SEO 友好、行业主流                    |
+| 数据库   | PostgreSQL 16                    | 生产级关系型数据库，展示 SQL 能力                 |
+| 缓存     | Redis 7                          | 文章列表/详情缓存，展示基础设施能力               |
+| ORM      | SQLAlchemy 2.0 + Alembic         | 类型提示友好、迁移管理                            |
+| 样式     | Tailwind CSS                     | utility 优先，自定义渐变色板                      |
+| 动效     | Framer Motion                    | 页面切换、滚动渐入、卡片 hover                    |
+| 数据获取 | React Query (CSR) / SSG (公开页) | 管理页客户端状态、公开页预渲染                    |
+| 鉴权     | JWT (httpOnly cookie)            | 无状态、前后端分离友好                            |
+| 容器化   | Docker Compose + Dockerfile      | 一键开发环境、生产部署一致                        |
 
 ### 1.4 非目标（YAGNI）
 
@@ -108,73 +108,73 @@ HTTP Request
 
 #### users
 
-| 字段 | 类型 | 约束 | 说明 |
-|------|------|------|------|
-| id | UUID | PK | |
-| email | str | unique, not null | |
-| username | str | unique, not null | |
-| password_hash | str | not null | bcrypt 哈希 |
-| is_admin | bool | default false | |
-| created_at | datetime | default now | |
+| 字段          | 类型     | 约束             | 说明        |
+| ------------- | -------- | ---------------- | ----------- |
+| id            | UUID     | PK               |             |
+| email         | str      | unique, not null |             |
+| username      | str      | unique, not null |             |
+| password_hash | str      | not null         | bcrypt 哈希 |
+| is_admin      | bool     | default false    |             |
+| created_at    | datetime | default now      |             |
 
 #### posts
 
-| 字段 | 类型 | 约束 | 说明 |
-|------|------|------|------|
-| id | UUID | PK | |
-| title | str | not null | |
-| slug | str | unique, not null | URL 友好 |
-| excerpt | str | nullable | 摘要 |
-| content | text | not null | Markdown 原文 |
-| cover_image | str | nullable | 图片 URL |
-| status | enum | not null, default 'draft' | draft / published |
-| views | int | default 0 | |
-| author_id | UUID | FK → users.id | |
-| category_id | UUID | FK → categories.id, nullable | |
-| published_at | datetime | nullable | 发布时填充 |
-| created_at | datetime | default now | |
-| updated_at | datetime | onupdate now | |
+| 字段         | 类型     | 约束                         | 说明              |
+| ------------ | -------- | ---------------------------- | ----------------- |
+| id           | UUID     | PK                           |                   |
+| title        | str      | not null                     |                   |
+| slug         | str      | unique, not null             | URL 友好          |
+| excerpt      | str      | nullable                     | 摘要              |
+| content      | text     | not null                     | Markdown 原文     |
+| cover_image  | str      | nullable                     | 图片 URL          |
+| status       | enum     | not null, default 'draft'    | draft / published |
+| views        | int      | default 0                    |                   |
+| author_id    | UUID     | FK → users.id                |                   |
+| category_id  | UUID     | FK → categories.id, nullable |                   |
+| published_at | datetime | nullable                     | 发布时填充        |
+| created_at   | datetime | default now                  |                   |
+| updated_at   | datetime | onupdate now                 |                   |
 
 #### tags
 
-| 字段 | 类型 | 约束 | 说明 |
-|------|------|------|------|
-| id | UUID | PK | |
-| name | str | not null | |
-| slug | str | unique, not null | |
+| 字段 | 类型 | 约束             | 说明 |
+| ---- | ---- | ---------------- | ---- |
+| id   | UUID | PK               |      |
+| name | str  | not null         |      |
+| slug | str  | unique, not null |      |
 
 #### post_tags（多对多关联）
 
-| 字段 | 类型 | 约束 |
-|------|------|------|
+| 字段    | 类型 | 约束          |
+| ------- | ---- | ------------- |
 | post_id | UUID | FK → posts.id |
-| tag_id | UUID | FK → tags.id |
+| tag_id  | UUID | FK → tags.id  |
 
 复合主键 (post_id, tag_id)。
 
 #### categories
 
-| 字段 | 类型 | 约束 | 说明 |
-|------|------|------|------|
-| id | UUID | PK | |
-| name | str | not null | |
-| slug | str | unique, not null | |
+| 字段 | 类型 | 约束             | 说明 |
+| ---- | ---- | ---------------- | ---- |
+| id   | UUID | PK               |      |
+| name | str  | not null         |      |
+| slug | str  | unique, not null |      |
 
 #### projects
 
-| 字段 | 类型 | 约束 | 说明 |
-|------|------|------|------|
-| id | UUID | PK | |
-| title | str | not null | |
-| slug | str | unique, not null | |
-| description | str | not null | 简短描述 |
-| content | text | not null | Markdown 详情 |
-| tech_stack | JSON | not null | ["Python","React",...] |
-| github_url | str | not null | |
-| demo_url | str | nullable | |
-| cover_image | str | nullable | |
-| sort_order | int | default 0 | 控制展示顺序 |
-| created_at | datetime | default now | |
+| 字段        | 类型     | 约束             | 说明                   |
+| ----------- | -------- | ---------------- | ---------------------- |
+| id          | UUID     | PK               |                        |
+| title       | str      | not null         |                        |
+| slug        | str      | unique, not null |                        |
+| description | str      | not null         | 简短描述               |
+| content     | text     | not null         | Markdown 详情          |
+| tech_stack  | JSON     | not null         | ["Python","React",...] |
+| github_url  | str      | not null         |                        |
+| demo_url    | str      | nullable         |                        |
+| cover_image | str      | nullable         |                        |
+| sort_order  | int      | default 0        | 控制展示顺序           |
+| created_at  | datetime | default now      |                        |
 
 ### 3.2 索引
 
@@ -189,14 +189,14 @@ HTTP Request
 
 ### 4.1 公开接口（无需鉴权）
 
-| 方法 | 路径 | 查询参数 | 说明 |
-|------|------|----------|------|
-| GET | `/api/posts` | page, per_page, tag, category | 已发布文章列表，分页 + 过滤 |
-| GET | `/api/posts/{slug}` | — | 文章详情，自增 views |
-| GET | `/api/tags` | — | 标签列表（含文章计数） |
-| GET | `/api/categories` | — | 分类列表（含文章计数） |
-| GET | `/api/projects` | — | 作品列表，按 sort_order 排序 |
-| GET | `/api/projects/{slug}` | — | 作品详情 |
+| 方法 | 路径                   | 查询参数                      | 说明                         |
+| ---- | ---------------------- | ----------------------------- | ---------------------------- |
+| GET  | `/api/posts`           | page, per_page, tag, category | 已发布文章列表，分页 + 过滤  |
+| GET  | `/api/posts/{slug}`    | —                             | 文章详情，自增 views         |
+| GET  | `/api/tags`            | —                             | 标签列表（含文章计数）       |
+| GET  | `/api/categories`      | —                             | 分类列表（含文章计数）       |
+| GET  | `/api/projects`        | —                             | 作品列表，按 sort_order 排序 |
+| GET  | `/api/projects/{slug}` | —                             | 作品详情                     |
 
 所有列表接口返回统一分页结构：
 
@@ -212,20 +212,20 @@ HTTP Request
 
 ### 4.2 管理接口（JWT 鉴权）
 
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| POST | `/api/auth/login` | 登录，返回 JWT（设 httpOnly cookie） |
-| POST | `/api/auth/logout` | 登出，清除 cookie |
-| GET | `/api/auth/me` | 获取当前用户信息 |
-| GET/POST | `/api/admin/posts` | 文章列表/创建 |
-| GET/PUT/DELETE | `/api/admin/posts/{id}` | 文章详情/更新/删除 |
-| GET/POST | `/api/admin/tags` | 标签列表/创建 |
-| PUT/DELETE | `/api/admin/tags/{id}` | 标签更新/删除 |
-| GET/POST | `/api/admin/categories` | 分类列表/创建 |
-| PUT/DELETE | `/api/admin/categories/{id}` | 分类更新/删除 |
-| GET/POST | `/api/admin/projects` | 作品列表/创建 |
-| GET/PUT/DELETE | `/api/admin/projects/{id}` | 作品详情/更新/删除 |
-| POST | `/api/admin/upload` | 图片上传 |
+| 方法           | 路径                         | 说明                                 |
+| -------------- | ---------------------------- | ------------------------------------ |
+| POST           | `/api/auth/login`            | 登录，返回 JWT（设 httpOnly cookie） |
+| POST           | `/api/auth/logout`           | 登出，清除 cookie                    |
+| GET            | `/api/auth/me`               | 获取当前用户信息                     |
+| GET/POST       | `/api/admin/posts`           | 文章列表/创建                        |
+| GET/PUT/DELETE | `/api/admin/posts/{id}`      | 文章详情/更新/删除                   |
+| GET/POST       | `/api/admin/tags`            | 标签列表/创建                        |
+| PUT/DELETE     | `/api/admin/tags/{id}`       | 标签更新/删除                        |
+| GET/POST       | `/api/admin/categories`      | 分类列表/创建                        |
+| PUT/DELETE     | `/api/admin/categories/{id}` | 分类更新/删除                        |
+| GET/POST       | `/api/admin/projects`        | 作品列表/创建                        |
+| GET/PUT/DELETE | `/api/admin/projects/{id}`   | 作品详情/更新/删除                   |
+| POST           | `/api/admin/upload`          | 图片上传                             |
 
 ### 4.3 鉴权设计
 
@@ -248,13 +248,13 @@ HTTP Request
 
 常见错误码：
 
-| HTTP 状态 | code | 场景 |
-|-----------|------|------|
-| 401 | UNAUTHORIZED | 无效或过期 token |
-| 403 | FORBIDDEN | 非 admin 用户 |
-| 404 | NOT_FOUND | 资源不存在 |
-| 422 | VALIDATION_ERROR | 请求参数校验失败（Pydantic 自动） |
-| 500 | INTERNAL_ERROR | 未预期异常 |
+| HTTP 状态 | code             | 场景                              |
+| --------- | ---------------- | --------------------------------- |
+| 401       | UNAUTHORIZED     | 无效或过期 token                  |
+| 403       | FORBIDDEN        | 非 admin 用户                     |
+| 404       | NOT_FOUND        | 资源不存在                        |
+| 422       | VALIDATION_ERROR | 请求参数校验失败（Pydantic 自动） |
+| 500       | INTERNAL_ERROR   | 未预期异常                        |
 
 ## 5. 前端设计
 
@@ -322,10 +322,10 @@ components/
 ```yaml
 # docker-compose.yml
 services:
-  postgres:    # PostgreSQL 16
-  redis:       # Redis 7（缓存文章列表/详情）
-  api:         # FastAPI + uvicorn --reload
-  web:         # Next.js dev server
+  postgres: # PostgreSQL 16
+  redis: # Redis 7（缓存文章列表/详情）
+  api: # FastAPI + uvicorn --reload
+  web: # Next.js dev server
 ```
 
 - `docker compose up` 一键启动全栈开发环境
@@ -334,13 +334,13 @@ services:
 
 ### 6.2 生产部署
 
-| 服务 | 部署目标 | 说明 |
-|------|----------|------|
-| 前端 web | Vercel | Next.js 原生支持，自动构建部署，边缘 CDN |
-| 后端 api | Fly.io | Dockerfile 部署，多 region 可选 |
-| PostgreSQL | Fly.io / Neon | 托管数据库 |
-| Redis | Upstash | 托管 Redis（serverless） |
-| 图片存储 | 本地 volume / S3 兼容 | 初期本地，后期可迁移 |
+| 服务       | 部署目标              | 说明                                     |
+| ---------- | --------------------- | ---------------------------------------- |
+| 前端 web   | Vercel                | Next.js 原生支持，自动构建部署，边缘 CDN |
+| 后端 api   | Fly.io                | Dockerfile 部署，多 region 可选          |
+| PostgreSQL | Fly.io / Neon         | 托管数据库                               |
+| Redis      | Upstash               | 托管 Redis（serverless）                 |
+| 图片存储   | 本地 volume / S3 兼容 | 初期本地，后期可迁移                     |
 
 - 前端使用 Next.js ISR（`revalidate: 60`）每分钟增量再生，新文章自动生效，无需手动触发
 - 可选增强: 后端发布文章时同时调用 Vercel Deploy Hook，实现发布后即时全量重建
@@ -367,12 +367,12 @@ services:
 
 ### 7.1 后端测试（Pytest + pytest-asyncio）
 
-| 层级 | 范围 | 示例 |
-|------|------|------|
-| 单元测试 | services 层业务逻辑 | 发布文章时 `published_at` 正确填充 |
-| 单元测试 | repositories 层数据访问 | 按标签过滤文章返回正确结果 |
-| API 测试 | routers 层端到端 | `GET /api/posts` 返回正确分页结构 |
-| 鉴权测试 | JWT 流程 | 无 token 访问 admin 接口返回 401 |
+| 层级     | 范围                    | 示例                               |
+| -------- | ----------------------- | ---------------------------------- |
+| 单元测试 | services 层业务逻辑     | 发布文章时 `published_at` 正确填充 |
+| 单元测试 | repositories 层数据访问 | 按标签过滤文章返回正确结果         |
+| API 测试 | routers 层端到端        | `GET /api/posts` 返回正确分页结构  |
+| 鉴权测试 | JWT 流程                | 无 token 访问 admin 接口返回 401   |
 
 - 使用 SQLite 内存库作为测试数据库，隔离生产数据库
 - Fixtures: 创建测试用户、测试文章、测试标签等共享数据
@@ -380,11 +380,11 @@ services:
 
 ### 7.2 前端测试（Vitest + RTL + Playwright）
 
-| 层级 | 范围 | 示例 |
-|------|------|------|
-| 组件测试 | Vitest + React Testing Library | PostCard 正确渲染标题/摘要 |
-| Hook 测试 | Vitest + RTL | usePosts 分页加载正确 |
-| E2E 测试 | Playwright | 登录 → 创建文章 → 发布 → 首页可见 |
+| 层级      | 范围                           | 示例                              |
+| --------- | ------------------------------ | --------------------------------- |
+| 组件测试  | Vitest + React Testing Library | PostCard 正确渲染标题/摘要        |
+| Hook 测试 | Vitest + RTL                   | usePosts 分页加载正确             |
+| E2E 测试  | Playwright                     | 登录 → 创建文章 → 发布 → 首页可见 |
 
 - 组件测试覆盖核心组件交互
 - E2E 测试覆盖关键用户流程
