@@ -6,7 +6,7 @@ import { useCreateProject, useUpdateProject } from "@/hooks/useAdminProjects";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 import { AdminApiError } from "@/lib/admin-api";
-import type { Project } from "@/lib/types";
+import type { Project, PostStatus } from "@/lib/types";
 
 interface ProjectFormProps {
   project?: Project;
@@ -30,6 +30,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
   const [sortOrder, setSortOrder] = useState(
     project?.sort_order ?? 0,
   );
+  const [status, setStatus] = useState<PostStatus>(project?.status ?? "draft");
   const [submitError, setSubmitError] = useState("");
 
   const isEdit = !!project;
@@ -50,6 +51,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
       demo_url: demoUrl || null,
       cover_image: coverImage || null,
       sort_order: sortOrder,
+      status,
     };
 
     if (isEdit && project) {
@@ -131,6 +133,20 @@ export function ProjectForm({ project }: ProjectFormProps) {
             onChange={(e) => setSortOrder(Number(e.target.value))}
             className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none"
           />
+        </div>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="mb-1 block text-sm text-muted">Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value as PostStatus)}
+            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none"
+          >
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+          </select>
         </div>
       </div>
 

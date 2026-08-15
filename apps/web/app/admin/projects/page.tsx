@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAdminProjects, useDeleteProject } from "@/hooks/useAdminProjects";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { Badge } from "@/components/ui/Badge";
 import { ErrorToast } from "@/components/ui/ErrorToast";
 import { AdminApiError } from "@/lib/admin-api";
 
@@ -39,6 +40,7 @@ export default function AdminProjectsPage() {
             <thead className="bg-surface">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium text-muted">Title</th>
+                <th className="px-4 py-3 text-left text-sm font-medium text-muted">Status</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-muted">Tech Stack</th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-muted">Order</th>
                 <th className="px-4 py-3 text-right text-sm font-medium text-muted">Actions</th>
@@ -54,6 +56,11 @@ export default function AdminProjectsPage() {
                     >
                       {project.title}
                     </Link>
+                  </td>
+                  <td className="px-4 py-3">
+                    <Badge variant={project.status === "published" ? "gradient" : "default"}>
+                      {project.status}
+                    </Badge>
                   </td>
                   <td className="px-4 py-3 text-sm text-muted">
                     {project.tech_stack.join(", ")}

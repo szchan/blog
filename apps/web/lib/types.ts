@@ -68,6 +68,8 @@ export interface Project {
   cover_image: string | null;
   sort_order: number;
   created_at: string;
+  status: PostStatus;
+  published_at: string | null;
 }
 
 export interface LoginRequest {
@@ -132,6 +134,7 @@ export interface ProjectCreate {
   demo_url?: string | null;
   cover_image?: string | null;
   sort_order?: number;
+  status?: PostStatus;
 }
 
 export interface ProjectUpdate {
@@ -144,6 +147,7 @@ export interface ProjectUpdate {
   demo_url?: string | null;
   cover_image?: string | null;
   sort_order?: number;
+  status?: PostStatus;
 }
 
 export interface UploadResponse {
