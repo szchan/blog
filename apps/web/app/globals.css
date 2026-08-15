@@ -83,3 +83,23 @@ html {
     border: 1px solid rgba(255, 255, 255, 0.08);
   }
 }
+
+[data-rehype-pretty-code-figure] pre {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border);
+}
+
+[data-rehype-pretty-code-title] {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--color-muted);
+  padding: 0.5rem 1rem;
+  background: var(--color-surface-light);
+  border-radius: 0.5rem 0.5rem 0 0;
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+}
+
+[data-line] {
+  padding: 0 1rem;
+}

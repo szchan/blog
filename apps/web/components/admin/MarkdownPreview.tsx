@@ -1,23 +1,23 @@
+"use client";
+
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypePrettyCode from "rehype-pretty-code";
-import type { Options } from "rehype-pretty-code";
 
-const options: Options = {
-  theme: "github-dark",
-  keepBackground: true,
-};
-
-interface PostContentProps {
+interface MarkdownPreviewProps {
   content: string;
 }
 
-export function PostContent({ content }: PostContentProps) {
+export function MarkdownPreview({ content }: MarkdownPreviewProps) {
+  if (!content) {
+    return (
+      <p className="text-sm text-muted">Preview will appear here...</p>
+    );
+  }
+
   return (
     <div className="max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[[rehypePrettyCode, options]]}
         components={{
           h1: ({ children }) => (
             <h1 className="mb-4 mt-8 text-3xl font-bold text-foreground">

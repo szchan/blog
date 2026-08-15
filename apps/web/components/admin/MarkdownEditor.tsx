@@ -1,6 +1,6 @@
 "use client";
 
-import { PostContent } from "@/components/blog/PostContent";
+import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
 
 interface MarkdownEditorProps {
   value: string;
@@ -27,11 +27,7 @@ export function MarkdownEditor({
       <div className="flex flex-col">
         <label className="mb-1 text-sm text-muted">Preview</label>
         <div className="min-h-[400px] flex-1 overflow-y-auto rounded-lg border border-border bg-surface p-4">
-          {value ? (
-            <PostContent content={value} />
-          ) : (
-            <p className="text-sm text-muted">Preview will appear here...</p>
-          )}
+          <MarkdownPreview content={value} />
         </div>
       </div>
     </div>
