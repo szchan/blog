@@ -1,5 +1,29 @@
 import "@testing-library/jest-dom/vitest";
 
+class MockIntersectionObserver {
+  readonly root = null;
+  readonly rootMargin = "";
+  readonly thresholds: ReadonlyArray<number> = [];
+  takeRecords(): IntersectionObserverEntry[] {
+    return [];
+  }
+  observe(): void {}
+  unobserve(): void {}
+  disconnect(): void {}
+  constructor(
+    _callback: IntersectionObserverCallback,
+    _options?: IntersectionObserverInit,
+  ) {}
+}
+
+if (typeof globalThis.IntersectionObserver === "undefined") {
+  Object.defineProperty(globalThis, "IntersectionObserver", {
+    value: MockIntersectionObserver,
+    writable: true,
+    configurable: true,
+  });
+}
+
 const mockLocation = {
   href: "http://localhost/",
   origin: "http://localhost",
