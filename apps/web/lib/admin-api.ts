@@ -14,6 +14,7 @@ import type {
   TagCreate,
   TagUpdate,
   TokenResponse,
+  UploadResponse,
   User,
 } from "@/lib/types";
 
@@ -184,4 +185,34 @@ export async function updateProject(
 
 export async function deleteProject(id: string): Promise<void> {
   return adminFetch<void>(`/api/admin/projects/${id}`, { method: "DELETE" });
+}
+
+export async function uploadImage(file: File): Promise<UploadResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const token = getToken();
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  const res = await fetch(`${API_URL}/api/admin/upload`, {
+    method: "POST",
+    headers,
+    body: formData,
+  });
+  if (res.status === 401) {
+    removeToken();
+    if (
+      typeof window !== "undefined" &&
+      !window.location.pathname.startsWith("/admin/login")
+    ) {
+      window.location.href = "/admin/login";
+    }
+    throw new AdminApiError("Unauthorized", 401);
+  }
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "Unknown error");
+    throw new AdminApiError(detail, res.status);
+  }
+  return res.json() as Promise<UploadResponse>;
 }

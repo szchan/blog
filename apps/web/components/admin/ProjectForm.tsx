@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCreateProject, useUpdateProject } from "@/hooks/useAdminProjects";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import type { Project } from "@/lib/types";
 
 interface ProjectFormProps {
@@ -148,16 +149,7 @@ export function ProjectForm({ project }: ProjectFormProps) {
         </div>
       </div>
 
-      <div>
-        <label className="mb-1 block text-sm text-muted">Cover Image URL</label>
-        <input
-          type="text"
-          value={coverImage}
-          onChange={(e) => setCoverImage(e.target.value)}
-          className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none"
-          placeholder="https://..."
-        />
-      </div>
+      <ImageUploader value={coverImage} onChange={setCoverImage} />
 
       <div className="flex gap-3">
         <button

@@ -6,6 +6,7 @@ import { useCreatePost, useUpdatePost } from "@/hooks/useAdminPosts";
 import { getAdminCategories, getAdminTags } from "@/lib/admin-api";
 import { useQuery } from "@tanstack/react-query";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import type { PostDetail, PostStatus } from "@/lib/types";
 
 interface PostFormProps {
@@ -118,17 +119,9 @@ export function PostForm({ post }: PostFormProps) {
 
       <MarkdownEditor value={content} onChange={setContent} />
 
+      <ImageUploader value={coverImage} onChange={setCoverImage} />
+
       <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <label className="mb-1 block text-sm text-muted">Cover Image URL</label>
-          <input
-            type="text"
-            value={coverImage}
-            onChange={(e) => setCoverImage(e.target.value)}
-            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground focus:border-primary focus:outline-none"
-            placeholder="https://..."
-          />
-        </div>
         <div>
           <label className="mb-1 block text-sm text-muted">Status</label>
           <select

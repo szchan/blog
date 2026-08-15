@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import type { PostListItem } from "@/lib/types";
@@ -11,6 +12,15 @@ export function PostCard({ post }: PostCardProps) {
   return (
     <Link href={`/blog/${post.slug}`} className="block transition-transform hover:scale-[1.02]">
       <GlassCard className="h-full p-6">
+        {post.cover_image && (
+          <Image
+            src={post.cover_image.startsWith("http") ? post.cover_image : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${post.cover_image}`}
+            alt={post.title}
+            width={400}
+            height={200}
+            className="h-40 w-full rounded-t-2xl object-cover"
+          />
+        )}
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2 text-xs text-muted">
             {post.category && <Badge>{post.category.name}</Badge>}

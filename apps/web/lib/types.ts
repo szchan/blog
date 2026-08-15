@@ -145,3 +145,7 @@ export interface ProjectUpdate {
   cover_image?: string | null;
   sort_order?: number;
 }
+
+export interface UploadResponse {
+  url: string;
+}

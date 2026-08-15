@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { PostContent } from "@/components/blog/PostContent";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -71,6 +72,16 @@ export default async function BlogPostPage(
           <span>By {post.author.username}</span>
         </div>
       </header>
+
+      {post.cover_image && (
+        <Image
+          src={post.cover_image.startsWith("http") ? post.cover_image : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${post.cover_image}`}
+          alt={post.title}
+          width={1200}
+          height={400}
+          className="mb-8 rounded-2xl object-cover"
+        />
+      )}
 
       <PostContent content={post.content} />
 

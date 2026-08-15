@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { TechBadge } from "@/components/projects/TechBadge";
 import type { Project } from "@/lib/types";
@@ -14,6 +15,15 @@ export function ProjectCard({ project }: ProjectCardProps) {
       className="block transition-transform hover:scale-[1.02]"
     >
       <GlassCard className="h-full p-6">
+        {project.cover_image && (
+          <Image
+            src={project.cover_image.startsWith("http") ? project.cover_image : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${project.cover_image}`}
+            alt={project.title}
+            width={400}
+            height={200}
+            className="h-40 w-full rounded-t-2xl object-cover"
+          />
+        )}
         <div className="flex flex-col gap-3">
           <h3 className="text-lg font-semibold text-foreground">
             {project.title}
