@@ -1,12 +1,16 @@
+import os
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.exc import IntegrityError
 
 from app.api.admin.categories import router as admin_categories_router
 from app.api.admin.posts import router as admin_posts_router
 from app.api.admin.projects import router as admin_projects_router
 from app.api.admin.tags import router as admin_tags_router
+from app.api.admin.upload import router as admin_upload_router
 from app.api.auth import router as auth_router
 from app.api.categories import router as categories_router
 from app.api.posts import router as posts_router
@@ -33,6 +37,11 @@ app.include_router(admin_posts_router)
 app.include_router(admin_tags_router)
 app.include_router(admin_categories_router)
 app.include_router(admin_projects_router)
+app.include_router(admin_upload_router)
+
+upload_path = os.path.join(os.getcwd(), settings.UPLOAD_DIR)
+os.makedirs(upload_path, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=upload_path), name="uploads")
 
 
 @app.exception_handler(IntegrityError)
