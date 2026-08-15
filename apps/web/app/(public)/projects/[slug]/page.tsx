@@ -5,6 +5,7 @@ import { PostContent } from "@/components/blog/PostContent";
 import { TechBadge } from "@/components/projects/TechBadge";
 import { Button } from "@/components/ui/Button";
 import { getAllProjectSlugs, getProject } from "@/lib/api";
+import { resolveImageUrl } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -83,7 +84,7 @@ export default async function ProjectDetailPage(
 
       {project.cover_image && (
         <Image
-          src={project.cover_image.startsWith("http") ? project.cover_image : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${project.cover_image}`}
+          src={resolveImageUrl(project.cover_image)}
           alt={project.title}
           width={1200}
           height={400}

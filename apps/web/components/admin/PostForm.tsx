@@ -94,6 +94,7 @@ export function PostForm({ post }: PostFormProps) {
           <label className="mb-1 block text-sm text-muted">Title</label>
           <input
             type="text"
+            name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
@@ -104,6 +105,7 @@ export function PostForm({ post }: PostFormProps) {
           <label className="mb-1 block text-sm text-muted">Slug</label>
           <input
             type="text"
+            name="slug"
             value={slug}
             onChange={(e) => setSlug(e.target.value)}
             required

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import type { PostListItem } from "@/lib/types";
+import { resolveImageUrl } from "@/lib/utils";
 
 interface PostCardProps {
   post: PostListItem;
@@ -16,7 +17,7 @@ export function PostCard({ post }: PostCardProps) {
         <GlassCard className="h-full p-6">
           {post.cover_image && (
             <Image
-              src={post.cover_image.startsWith("http") ? post.cover_image : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${post.cover_image}`}
+              src={resolveImageUrl(post.cover_image)}
               alt={post.title}
               width={400}
               height={200}

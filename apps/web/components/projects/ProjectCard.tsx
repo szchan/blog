@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { TechBadge } from "@/components/projects/TechBadge";
 import type { Project } from "@/lib/types";
+import { resolveImageUrl } from "@/lib/utils";
 
 interface ProjectCardProps {
   project: Project;
@@ -16,7 +17,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <GlassCard className="h-full p-6">
           {project.cover_image && (
             <Image
-              src={project.cover_image.startsWith("http") ? project.cover_image : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${project.cover_image}`}
+              src={resolveImageUrl(project.cover_image)}
               alt={project.title}
               width={400}
               height={200}

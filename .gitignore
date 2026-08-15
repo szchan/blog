@@ -31,3 +31,6 @@ Thumbs.db
 
 # Docker
 postgres_data/
+
+# Uploads (created at runtime by API)
+uploads/

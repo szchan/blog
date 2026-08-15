@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { uploadImage } from "@/lib/admin-api";
+import { uploadImage, AdminApiError } from "@/lib/admin-api";
+import { resolveImageUrl } from "@/lib/utils";
 
 interface ImageUploaderProps {
   value: string;
@@ -20,18 +21,14 @@ export function ImageUploader({ value, onChange }: ImageUploaderProps) {
     try {
       const result = await uploadImage(file);
       onChange(result.url);
-    } catch {
-      setError("Upload failed");
+    } catch (e) {
+      setError(e instanceof AdminApiError ? e.message : "Upload failed");
     } finally {
       setUploading(false);
     }
   };
 
-  const fullUrl = value
-    ? value.startsWith("http")
-      ? value
-      : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${value}`
-    : "";
+  const fullUrl = value ? resolveImageUrl(value) : "";
 
   return (
     <div className="flex flex-col gap-2">

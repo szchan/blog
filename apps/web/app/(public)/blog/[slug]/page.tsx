@@ -6,6 +6,7 @@ import { PostContent } from "@/components/blog/PostContent";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { getAllPostSlugs, getPost } from "@/lib/api";
+import { resolveImageUrl } from "@/lib/utils";
 
 export const revalidate = 60;
 
@@ -77,7 +78,7 @@ export default async function BlogPostPage(
 
       {post.cover_image && (
         <Image
-          src={post.cover_image.startsWith("http") ? post.cover_image : `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000"}${post.cover_image}`}
+          src={resolveImageUrl(post.cover_image)}
           alt={post.title}
           width={1200}
           height={400}
