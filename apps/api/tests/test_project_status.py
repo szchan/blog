@@ -145,3 +145,28 @@ def test_update_to_published_sets_published_at(admin_client, session):
     assert update_resp.status_code == 200
     assert update_resp.json()["status"] == "published"
     assert update_resp.json()["published_at"] is not None
+
+
+def test_update_to_draft_clears_published_at(admin_client):
+    create_resp = admin_client.post(
+        "/api/admin/projects",
+        json={
+            "title": "Test",
+            "slug": "test-draft-clear",
+            "description": "desc",
+            "content": "content",
+            "tech_stack": [],
+            "github_url": "https://github.com/test/repo",
+            "status": "published",
+        },
+    )
+    project_id = create_resp.json()["id"]
+    assert create_resp.json()["published_at"] is not None
+
+    update_resp = admin_client.put(
+        f"/api/admin/projects/{project_id}",
+        json={"status": "draft"},
+    )
+    assert update_resp.status_code == 200
+    assert update_resp.json()["status"] == "draft"
+    assert update_resp.json()["published_at"] is None

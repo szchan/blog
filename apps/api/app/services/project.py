@@ -40,8 +40,6 @@ class ProjectService:
             sort_order=data.sort_order,
             status=data.status,
         )
-        if data.status == ProjectStatus.published:
-            project.published_at = datetime.now(UTC)
         self.repo.add(project)
         self.session.commit()
         return project
