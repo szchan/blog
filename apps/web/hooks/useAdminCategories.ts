@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  AdminApiError,
   createCategory,
   deleteCategory,
   getAdminCategories,
@@ -43,6 +44,10 @@ export function useDeleteCategory() {
     mutationFn: (id: string) => deleteCategory(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "categories"] });
+    },
+    onError: (error: unknown) => {
+      const msg = error instanceof AdminApiError ? error.message : "Delete failed";
+      console.error(msg);
     },
   });
 }

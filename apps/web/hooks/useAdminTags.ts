@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  AdminApiError,
   createTag,
   deleteTag,
   getAdminTags,
@@ -43,6 +44,10 @@ export function useDeleteTag() {
     mutationFn: (id: string) => deleteTag(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "tags"] });
+    },
+    onError: (error: unknown) => {
+      const msg = error instanceof AdminApiError ? error.message : "Delete failed";
+      console.error(msg);
     },
   });
 }

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCreateProject, useUpdateProject } from "@/hooks/useAdminProjects";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
+import { AdminApiError } from "@/lib/admin-api";
 import type { Project } from "@/lib/types";
 
 interface ProjectFormProps {
@@ -56,13 +57,19 @@ export function ProjectForm({ project }: ProjectFormProps) {
         { id: project.id, data },
         {
           onSuccess: () => router.push("/admin/projects"),
-          onError: () => setSubmitError("Failed to save. Please try again."),
+          onError: (error: unknown) => {
+            const msg = error instanceof AdminApiError ? error.message : "Failed to save. Please try again.";
+            setSubmitError(msg);
+          },
         },
       );
     } else {
       createProject.mutate(data, {
         onSuccess: () => router.push("/admin/projects"),
-        onError: () => setSubmitError("Failed to save. Please try again."),
+        onError: (error: unknown) => {
+          const msg = error instanceof AdminApiError ? error.message : "Failed to save. Please try again.";
+          setSubmitError(msg);
+        },
       });
     }
   };

@@ -5,11 +5,14 @@ import { useState } from "react";
 import { useAdminPosts, useDeletePost } from "@/hooks/useAdminPosts";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
 import { Badge } from "@/components/ui/Badge";
+import { ErrorToast } from "@/components/ui/ErrorToast";
+import { AdminApiError } from "@/lib/admin-api";
 
 export default function AdminPostsPage() {
   const { data: posts, isLoading } = useAdminPosts();
   const deletePost = useDeletePost();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState("");
 
   if (isLoading) {
     return <p className="text-muted">Loading posts...</p>;
@@ -84,12 +87,18 @@ export default function AdminPostsPage() {
         message="Are you sure you want to delete this post? This action cannot be undone."
         onConfirm={() => {
           if (deleteId) {
-            deletePost.mutate(deleteId);
+            deletePost.mutate(deleteId, {
+              onError: (error: unknown) => {
+                const msg = error instanceof AdminApiError ? error.message : "Delete failed";
+                setDeleteError(msg);
+              },
+            });
             setDeleteId(null);
           }
         }}
         onCancel={() => setDeleteId(null)}
       />
+      <ErrorToast message={deleteError} onClose={() => setDeleteError("")} />
     </div>
   );
 }

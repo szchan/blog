@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  AdminApiError,
   createProject,
   deleteProject,
   getAdminProjects,
@@ -43,6 +44,10 @@ export function useDeleteProject() {
     mutationFn: (id: string) => deleteProject(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "projects"] });
+    },
+    onError: (error: unknown) => {
+      const msg = error instanceof AdminApiError ? error.message : "Delete failed";
+      console.error(msg);
     },
   });
 }

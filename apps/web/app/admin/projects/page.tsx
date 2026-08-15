@@ -4,11 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAdminProjects, useDeleteProject } from "@/hooks/useAdminProjects";
 import { ConfirmDialog } from "@/components/admin/ConfirmDialog";
+import { ErrorToast } from "@/components/ui/ErrorToast";
+import { AdminApiError } from "@/lib/admin-api";
 
 export default function AdminProjectsPage() {
   const { data: projects, isLoading } = useAdminProjects();
   const deleteProject = useDeleteProject();
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState("");
 
   if (isLoading) {
     return <p className="text-muted">Loading projects...</p>;
@@ -77,12 +80,18 @@ export default function AdminProjectsPage() {
         message="Are you sure you want to delete this project?"
         onConfirm={() => {
           if (deleteId) {
-            deleteProject.mutate(deleteId);
+            deleteProject.mutate(deleteId, {
+              onError: (error: unknown) => {
+                const msg = error instanceof AdminApiError ? error.message : "Delete failed";
+                setDeleteError(msg);
+              },
+            });
             setDeleteId(null);
           }
         }}
         onCancel={() => setDeleteId(null)}
       />
+      <ErrorToast message={deleteError} onClose={() => setDeleteError("")} />
     </div>
   );
 }

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCreatePost, useUpdatePost } from "@/hooks/useAdminPosts";
-import { getAdminCategories, getAdminTags } from "@/lib/admin-api";
+import { getAdminCategories, getAdminTags, AdminApiError } from "@/lib/admin-api";
 import { useQuery } from "@tanstack/react-query";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { ImageUploader } from "@/components/admin/ImageUploader";
@@ -70,13 +70,19 @@ export function PostForm({ post }: PostFormProps) {
         { id: post.id, data },
         {
           onSuccess: () => router.push("/admin/posts"),
-          onError: () => setSubmitError("Failed to save. Please try again."),
+          onError: (error: unknown) => {
+            const msg = error instanceof AdminApiError ? error.message : "Failed to save. Please try again.";
+            setSubmitError(msg);
+          },
         },
       );
     } else {
       createPost.mutate(data, {
         onSuccess: () => router.push("/admin/posts"),
-        onError: () => setSubmitError("Failed to save. Please try again."),
+        onError: (error: unknown) => {
+          const msg = error instanceof AdminApiError ? error.message : "Failed to save. Please try again.";
+          setSubmitError(msg);
+        },
       });
     }
   };

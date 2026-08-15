@@ -1,7 +1,13 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createPost, deletePost, getAdminPosts, updatePost } from "@/lib/admin-api";
+import {
+  AdminApiError,
+  createPost,
+  deletePost,
+  getAdminPosts,
+  updatePost,
+} from "@/lib/admin-api";
 import type { PostCreate, PostUpdate } from "@/lib/types";
 
 export function useAdminPosts() {
@@ -38,6 +44,10 @@ export function useDeletePost() {
     mutationFn: (id: string) => deletePost(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "posts"] });
+    },
+    onError: (error: unknown) => {
+      const msg = error instanceof AdminApiError ? error.message : "Delete failed";
+      console.error(msg);
     },
   });
 }
