@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useRef } from "react";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -8,7 +8,6 @@ interface ConfirmDialogProps {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
-  children?: ReactNode;
 }
 
 export function ConfirmDialog({
@@ -18,12 +17,35 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const confirmRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    confirmRef.current?.focus();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onCancel();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [open, onCancel]);
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="glass gradient-border w-full max-w-sm rounded-2xl p-6">
-        <h2 className="mb-2 text-lg font-semibold text-foreground">{title}</h2>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={onCancel}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="dialog-title"
+        className="glass gradient-border w-full max-w-sm rounded-2xl p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 id="dialog-title" className="mb-2 text-lg font-semibold text-foreground">
+          {title}
+        </h2>
         <p className="mb-4 text-sm text-muted">{message}</p>
         <div className="flex justify-end gap-3">
           <button
@@ -33,6 +55,7 @@ export function ConfirmDialog({
             Cancel
           </button>
           <button
+            ref={confirmRef}
             onClick={onConfirm}
             className="rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
           >

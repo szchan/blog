@@ -47,6 +47,5 @@ try {
     configurable: true,
   });
 } catch {
-  // jsdom may not allow redefining location; tests that spy on
-  // window.location.href will need an alternative approach.
+  void 0;
 }
