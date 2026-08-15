@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { getAllPostSlugs, getPost } from "@/lib/api";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   try {
     const slugs = await getAllPostSlugs();

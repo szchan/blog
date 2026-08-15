@@ -6,6 +6,8 @@ import { TechBadge } from "@/components/projects/TechBadge";
 import { Button } from "@/components/ui/Button";
 import { getAllProjectSlugs, getProject } from "@/lib/api";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   try {
     const slugs = await getAllProjectSlugs();

@@ -4,6 +4,8 @@ import { Pagination } from "@/components/blog/Pagination";
 import { TagFilter } from "@/components/blog/TagFilter";
 import { getPosts, getTags } from "@/lib/api";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   description: "Articles on software engineering, web development, and more.",
 };

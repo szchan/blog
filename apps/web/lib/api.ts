@@ -22,6 +22,7 @@ export async function fetchApi<T>(path: string): Promise<T> {
   const url = `${API_URL}${path}`;
   const res = await fetch(url, {
     headers: { "Content-Type": "application/json" },
+    next: { revalidate: 60 },
   });
   if (!res.ok) {
     throw new ApiError(`API error: ${res.status}`, res.status);

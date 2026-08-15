@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { getProjects } from "@/lib/api";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Projects",
   description: "Open-source projects and experiments.",

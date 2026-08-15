@@ -3,6 +3,8 @@ import { PostCard } from "@/components/blog/PostCard";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { getPosts, getProjects } from "@/lib/api";
 
+export const revalidate = 60;
+
 export default async function Home() {
   const [postsData, projects] = await Promise.all([
     getPosts(1, 6).catch(() => ({ items: [], total: 0, page: 1, per_page: 6, total_pages: 0 })),
