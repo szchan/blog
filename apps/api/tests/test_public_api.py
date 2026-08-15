@@ -1,6 +1,6 @@
 from app.models.category import Category
 from app.models.post import Post, PostStatus
-from app.models.project import Project
+from app.models.project import Project, ProjectStatus
 from app.models.tag import Tag
 from app.models.user import User
 
@@ -93,6 +93,7 @@ def test_list_projects(client, session):
         content="Details",
         tech_stack=["Python", "React"],
         github_url="https://github.com/me/project",
+        status=ProjectStatus.published,
     )
     session.add(project)
     session.commit()
@@ -113,6 +114,7 @@ def test_get_project_by_slug(client, session):
         content="Details",
         tech_stack=["FastAPI"],
         github_url="https://github.com/me/portfolio",
+        status=ProjectStatus.published,
     )
     session.add(project)
     session.commit()

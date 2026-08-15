@@ -1,11 +1,23 @@
-import uuid
-from datetime import datetime
+from __future__ import annotations
 
-from sqlalchemy import DateTime, Integer, String, Text, func
+import enum
+import uuid
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING, Any
+
+from sqlalchemy import DateTime, Enum, Integer, String, Text, event, func
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.types import JSON
 
 from app.models.base import Base
+
+if TYPE_CHECKING:
+    pass
+
+
+class ProjectStatus(enum.Enum):
+    draft = "draft"
+    published = "published"
 
 
 class Project(Base):
@@ -21,4 +33,14 @@ class Project(Base):
     demo_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     cover_image: Mapped[str | None] = mapped_column(String(500), nullable=True)
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
+    status: Mapped[ProjectStatus] = mapped_column(
+        Enum(ProjectStatus), default=ProjectStatus.draft
+    )
+    published_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+@event.listens_for(Project, "before_insert")
+def _set_published_at(mapper: Any, connection: Any, target: Project) -> None:
+    if target.status == ProjectStatus.published and target.published_at is None:
+        target.published_at = datetime.now(UTC)

@@ -3,6 +3,8 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
+from app.models.project import ProjectStatus
+
 
 class ProjectBase(BaseModel):
     title: str
@@ -14,6 +16,7 @@ class ProjectBase(BaseModel):
     demo_url: str | None = None
     cover_image: str | None = None
     sort_order: int = 0
+    status: ProjectStatus = ProjectStatus.draft
 
 
 class ProjectCreate(ProjectBase):
@@ -30,6 +33,7 @@ class ProjectUpdate(BaseModel):
     demo_url: str | None = None
     cover_image: str | None = None
     sort_order: int | None = None
+    status: ProjectStatus | None = None
 
 
 class ProjectResponse(ProjectBase):
@@ -37,3 +41,4 @@ class ProjectResponse(ProjectBase):
 
     id: uuid.UUID
     created_at: datetime
+    published_at: datetime | None

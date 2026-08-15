@@ -18,7 +18,7 @@ def list_projects(
     admin: User = Depends(get_current_admin),
 ) -> list[ProjectResponse]:
     svc = ProjectService(db)
-    return svc.list_projects()
+    return svc.get_all_projects()
 
 
 @router.get("/{project_id}", response_model=ProjectResponse)

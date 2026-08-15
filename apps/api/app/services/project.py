@@ -1,8 +1,9 @@
 import uuid
+from datetime import UTC, datetime
 
 from sqlalchemy.orm import Session
 
-from app.models.project import Project
+from app.models.project import Project, ProjectStatus
 from app.repositories.project import ProjectRepository
 from app.schemas.project import ProjectCreate, ProjectResponse, ProjectUpdate
 
@@ -13,6 +14,10 @@ class ProjectService:
         self.repo = ProjectRepository(session)
 
     def list_projects(self) -> list[ProjectResponse]:
+        projects = self.repo.get_published_ordered()
+        return [ProjectResponse.model_validate(p) for p in projects]
+
+    def get_all_projects(self) -> list[ProjectResponse]:
         projects = self.repo.get_all_ordered()
         return [ProjectResponse.model_validate(p) for p in projects]
 
@@ -33,7 +38,10 @@ class ProjectService:
             demo_url=data.demo_url,
             cover_image=data.cover_image,
             sort_order=data.sort_order,
+            status=data.status,
         )
+        if data.status == ProjectStatus.published:
+            project.published_at = datetime.now(UTC)
         self.repo.add(project)
         self.session.commit()
         return project
@@ -43,6 +51,12 @@ class ProjectService:
         if project is None:
             return None
         update_data = data.model_dump(exclude_unset=True)
+        if "status" in update_data:
+            new_status = update_data["status"]
+            if new_status == ProjectStatus.published and project.published_at is None:
+                update_data["published_at"] = datetime.now(UTC)
+            elif new_status == ProjectStatus.draft:
+                update_data["published_at"] = None
         for key, value in update_data.items():
             setattr(project, key, value)
         self.session.commit()
