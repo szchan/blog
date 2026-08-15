@@ -39,7 +39,8 @@ Project model 添加：
 
 #### Service (`app/services/project.py`)
 
-- `list_projects()`：改为只返回 `status == published` 的项目，按 `sort_order` 排序
+- `list_projects()`：改为只返回 `status == published` 的项目，按 `sort_order` 排序（公开 API 调用）
+- `get_all_projects()`：新增方法，返回全部项目（admin API 调用），与 PostService 的 `get_all_posts()` 模式一致
 - `get_project(slug)`：只返回 published 项目，draft 返回 None
 - `create_project(data)`：若 status 为 published，填充 `published_at`
 - `update_project(id, data)`：若 status 从 draft 改为 published，填充 `published_at`；若改回 draft，清空 `published_at`
@@ -51,7 +52,7 @@ Project model 添加：
 
 #### Admin API (`app/api/admin/projects.py`)
 
-无需改动 — 已使用 `svc.repo.get_by_id()` 和 `svc.list_projects()` 直接查全部。
+无需改动 — admin router 改为调用 `svc.get_all_projects()` 返回全部项目（含 draft）。
 
 ### 前端
 
