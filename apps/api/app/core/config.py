@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     ADMIN_EMAIL: str = "admin@example.com"
     ADMIN_USERNAME: str = "admin"
     ADMIN_PASSWORD: str = "changeme123"
+    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    UPLOAD_DIR: str = "uploads"
+    SECURE_COOKIES: bool = False
 
 
 settings = Settings()

@@ -12,12 +12,13 @@ from app.api.categories import router as categories_router
 from app.api.posts import router as posts_router
 from app.api.projects import router as projects_router
 from app.api.tags import router as tags_router
+from app.core.config import settings
 
 app = FastAPI(title="Blog API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
